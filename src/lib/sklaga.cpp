@@ -1,26 +1,22 @@
 #include <string>
+#include <utility>
 #include "SDL.h"
+#include "window.h"
 
-void init_window(int width, int height, std::string title){
-    //The window we'll be rendering to
-    SDL_Window* window = NULL;
+void init_window(int width, int height, const std::string& title){
+    auto w = new Window(width, height, title);
+
+    //Create window
+    SDL_Window* window = w->getWindow();
 
     //The surface contained by the window
     SDL_Surface* screenSurface = NULL;
 
-    //Initialize SDL
-    if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
-    {
-        printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
+    if( window == NULL ) {
+        printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
+
+        return;
     } else {
-        //Create window
-        window = SDL_CreateWindow( title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN );
-        if( window == NULL )
-        {
-            printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
-        }
-        else
-        {
             //Get window surface
             screenSurface = SDL_GetWindowSurface( window );
 
@@ -32,11 +28,10 @@ void init_window(int width, int height, std::string title){
 
             //Hack to get window to stay up
             SDL_Event e; bool quit = false; while(!quit){ while( SDL_PollEvent(&e ) ){ if(e.type == SDL_QUIT ) quit = true; } }
-        }
     }
 
     //Destroy window
-    SDL_DestroyWindow( window );
+    delete(w);
 
     //Quit SDL subsystems
     SDL_Quit();

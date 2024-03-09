@@ -17,7 +17,7 @@ else()
 endif()
 
 
-set(APP_SOURCES src/example/main.cpp src/lib/sklaga.cpp)
+set(APP_SOURCES src/example/main.cpp src/lib/sklaga.cpp src/lib/window.cpp src/lib/window.h)
 
 add_executable(example ${APP_SOURCES})
 
